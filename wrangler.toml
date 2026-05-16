@@ -1,0 +1,13 @@
+# Cloudflare Workers — Static Assets deployment for a fully static Next.js site.
+# No Worker code (no `main` field) — Cloudflare serves files in ./out directly.
+#
+# `name` is overridden by the Workers project in the Cloudflare dashboard
+# when deploying via Git, so it's only used for local `wrangler deploy`.
+name = "luxe-estates"
+compatibility_date = "2024-11-06"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "./out"
+# Serve /404.html when no static file matches (Next.js emits this).
+not_found_handling = "404-page"
