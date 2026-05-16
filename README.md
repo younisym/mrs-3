@@ -38,15 +38,17 @@ The project ships as a **Cloudflare Worker with Static Assets** (the modern repl
 
 1. Push the project to GitHub / GitLab.
 2. Cloudflare dashboard → **Workers & Pages → Create → Workers → Connect to Git** (pick the repo).
-3. Under **Build configuration**:
+3. Under **Build configuration**, set both fields exactly:
    - **Build command**: `npm install && npm run build`
-   - **Deploy command**: `npx wrangler@latest deploy`
+   - **Deploy command**: `npx wrangler deploy`
    - **Root directory**: leave as `/`
 4. Under **Variables and Secrets**, add:
    - `NODE_VERSION` = `20.18.0`
 5. Save and deploy. Subsequent pushes auto-deploy.
 
-The `[assets] directory = "./out"` block in `wrangler.toml` tells Wrangler exactly where to find the static site — that's what was missing in the failing build.
+> **Why the build command matters.** Cloudflare runs `npm install` automatically but does **not** run a build unless you tell it to. The `[build] command` line inside `wrangler.toml` also runs the build before deploy as a safety net — so even if the dashboard's Build command is left empty, wrangler will still produce `./out` itself.
+
+The `[assets] directory = "./out"` block in `wrangler.toml` tells Wrangler exactly where to find the static site.
 
 ### Option B — Local deploy with Wrangler
 

@@ -7,6 +7,12 @@ name = "luxe-estates"
 compatibility_date = "2024-11-06"
 compatibility_flags = ["nodejs_compat"]
 
+# Runs `next build` (output: 'export' → emits ./out) before wrangler deploy.
+# This means `npx wrangler deploy` works end-to-end, even when Cloudflare's
+# dashboard "Build command" field is empty.
+[build]
+command = "npm install && npm run build"
+
 [assets]
 directory = "./out"
 # Serve /404.html when no static file matches (Next.js emits this).
