@@ -178,10 +178,14 @@
   }
 }
 
-/* Hide native cursor on desktop for custom cursor (optional fallback) */
-@media (hover: hover) and (pointer: fine) {
-  .has-custom-cursor,
-  .has-custom-cursor * {
-    cursor: none;
+/* Respect reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

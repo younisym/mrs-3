@@ -2,15 +2,15 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowDown, Play } from "lucide-react";
+import { Play, ArrowRight } from "lucide-react";
 
 const reveal = {
   hidden: { y: "110%" },
   show: (i = 0) => ({
     y: "0%",
     transition: {
-      duration: 1.2,
-      delay: 0.2 + i * 0.08,
+      duration: 1.1,
+      delay: 0.18 + i * 0.08,
       ease: [0.2, 0.8, 0.2, 1]
     }
   })
@@ -23,21 +23,21 @@ export default function Hero() {
     offset: ["start start", "end start"]
   });
 
-  const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const yTitle = useTransform(scrollYProgress, [0, 1], ["0%", "-25%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+  // Subtle, performance-friendly parallax.
+  const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.06]);
 
   return (
     <section
       id="home"
       ref={ref}
-      className="relative h-[110vh] w-full overflow-hidden bg-ink-950 grain"
+      className="relative min-h-screen w-full overflow-hidden bg-ink-950 grain flex flex-col"
     >
       {/* Background */}
       <motion.div
         style={{ y: yBg, scale }}
-        className="absolute inset-0 -z-10"
+        className="absolute inset-0 -z-10 will-change-transform"
       >
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -46,34 +46,35 @@ export default function Hero() {
               "url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2400&auto=format&fit=crop')"
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-ink-950/70 via-ink-950/60 to-ink-950" />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink-950/70 via-transparent to-ink-950/40" />
-        {/* Animated silk lines */}
+        <div className="absolute inset-0 bg-gradient-to-b from-ink-950/70 via-ink-950/55 to-ink-950" />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink-950/75 via-transparent to-ink-950/35" />
+
+        {/* Silk lines — fewer, cleaner */}
         <svg
-          className="absolute inset-0 h-full w-full opacity-40 mix-blend-screen"
+          className="absolute inset-0 h-full w-full opacity-35 mix-blend-screen"
           viewBox="0 0 1440 900"
           preserveAspectRatio="none"
           fill="none"
         >
           <defs>
             <linearGradient id="silk" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stopColor="#f4ecd0" stopOpacity="0.0" />
-              <stop offset=".5" stopColor="#f4ecd0" stopOpacity="0.35" />
-              <stop offset="1" stopColor="#f4ecd0" stopOpacity="0.0" />
+              <stop offset="0" stopColor="#f4ecd0" stopOpacity="0" />
+              <stop offset=".5" stopColor="#f4ecd0" stopOpacity=".35" />
+              <stop offset="1" stopColor="#f4ecd0" stopOpacity="0" />
             </linearGradient>
           </defs>
-          {[...Array(6)].map((_, i) => (
+          {[0, 1, 2, 3].map((i) => (
             <motion.path
               key={i}
-              d={`M -50 ${120 + i * 110} C 360 ${40 + i * 110} 1080 ${
-                260 + i * 110
-              } 1500 ${80 + i * 110}`}
+              d={`M -50 ${180 + i * 160} C 360 ${100 + i * 160} 1080 ${
+                340 + i * 160
+              } 1500 ${140 + i * 160}`}
               stroke="url(#silk)"
-              strokeWidth="1.1"
+              strokeWidth="1"
               initial={{ pathLength: 0, opacity: 0 }}
               animate={{ pathLength: 1, opacity: 1 }}
               transition={{
-                duration: 3.2 + i * 0.4,
+                duration: 2.4 + i * 0.3,
                 delay: 0.3 + i * 0.15,
                 ease: "easeInOut"
               }}
@@ -82,32 +83,33 @@ export default function Hero() {
         </svg>
       </motion.div>
 
-      {/* Content */}
+      {/* Content — flex column so it never collides with side rails */}
       <motion.div
-        style={{ y: yTitle, opacity }}
-        className="relative z-10 mx-auto flex h-full max-w-[1500px] flex-col px-6 md:px-12 pt-40 md:pt-48"
+        style={{ opacity }}
+        className="relative z-10 mx-auto flex w-full max-w-[1500px] flex-1 flex-col px-5 sm:px-8 md:px-12 pt-32 sm:pt-36 md:pt-40 pb-16 md:pb-24"
       >
         {/* Top eyebrow */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.4 }}
+          transition={{ duration: 0.9, delay: 0.25 }}
           className="flex items-center gap-4"
         >
-          <span className="block h-px w-12 bg-ivory-100/40" />
-          <span className="eyebrow">Established · MMXXIV</span>
+          <span className="block h-px w-10 md:w-12 bg-ivory-200/70" />
+          <span className="eyebrow text-ivory-200">A Vision Set in Stone</span>
         </motion.div>
 
-        {/* Title */}
-        <div className="mt-10 md:mt-14">
-          {["Quiet luxury", "in every"].map((line, i) => (
+        {/* Title — clamp ensures it never overflows */}
+        <div className="mt-6 sm:mt-10 max-w-[1100px]">
+          {["Not just building.", "Elevating"].map((line, i) => (
             <div key={i} className="overflow-hidden">
               <motion.h1
                 variants={reveal}
                 initial="hidden"
                 animate="show"
                 custom={i}
-                className="display-serif text-ivory-100 text-[18vw] sm:text-[15vw] md:text-[12vw] lg:text-[11vw] xl:text-[10.5vw]"
+                className="display-serif text-ivory-100"
+                style={{ fontSize: "clamp(2.6rem, 11vw, 9.5rem)", lineHeight: 0.95 }}
               >
                 {line}
               </motion.h1>
@@ -119,89 +121,85 @@ export default function Hero() {
               initial="hidden"
               animate="show"
               custom={2}
-              className="display-serif text-ivory-100 text-[18vw] sm:text-[15vw] md:text-[12vw] lg:text-[11vw] xl:text-[10.5vw]"
+              className="display-serif"
+              style={{ fontSize: "clamp(2.6rem, 11vw, 9.5rem)", lineHeight: 0.95 }}
             >
-              <span className="script-accent text-ivory-200">residence</span>
-              <span className="text-ivory-100">.</span>
+              <span className="script-accent text-ivory-200">remarkable</span>
+              <span className="text-ivory-100"> experiences.</span>
             </motion.h1>
           </div>
         </div>
 
         {/* Sub & CTAs */}
-        <div className="mt-10 md:mt-14 flex flex-col md:flex-row md:items-end md:justify-between gap-10">
+        <div className="mt-10 md:mt-14 grid gap-8 md:grid-cols-2 md:items-end">
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 1, ease: [0.2, 0.8, 0.2, 1] }}
-            className="max-w-md text-[15px] leading-relaxed text-ivory-200/75"
+            transition={{ duration: 1, delay: 0.9, ease: [0.2, 0.8, 0.2, 1] }}
+            className="max-w-md text-[14px] sm:text-[15px] leading-relaxed text-ivory-200/80"
           >
-            A real-estate atelier shaping cinematic residential and commercial
-            sanctuaries — where stillness meets craft, and architecture becomes
-            a way of life.
+            Twenty-two years of regional craft — distilled from thirty-one
+            developments in the UAE and channelled into Egypt&rsquo;s rising
+            urban scene. Residential, hospitality, industrial. One discipline:
+            precision, on time, with quiet luxury.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 1.2 }}
-            className="flex flex-wrap items-center gap-4"
+            transition={{ duration: 1, delay: 1.05 }}
+            className="flex flex-wrap items-center gap-3 md:justify-end"
           >
             <a href="#projects" className="luxe-btn-solid">
-              Discover Collection
-              <span aria-hidden>→</span>
+              Explore the portfolio
+              <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
             </a>
-            <a
-              href="#experience"
-              className="luxe-btn group"
-              data-cursor="hover"
-            >
+            <a href="#experience" className="luxe-btn group">
               <span className="flex h-5 w-5 items-center justify-center rounded-full border border-ivory-100/40 group-hover:border-ivory-100">
                 <Play className="h-2.5 w-2.5 fill-ivory-100" strokeWidth={0} />
               </span>
-              Watch the film
+              Atelier film
             </a>
           </motion.div>
         </div>
-      </motion.div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3"
-      >
-        <span className="eyebrow">Scroll</span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="flex h-10 w-6 items-start justify-center rounded-full border border-ivory-100/35 pt-2"
-        >
-          <span className="block h-2 w-px bg-ivory-100/80" />
-        </motion.div>
-      </motion.div>
+        {/* Scroll indicator + meta — pinned to bottom of hero, never collides with title */}
+        <div className="mt-auto pt-12 flex items-end justify-between gap-6">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.3, duration: 0.8 }}
+            className="flex items-center gap-3"
+          >
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{
+                duration: 2.4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="flex h-9 w-5 items-start justify-center rounded-full border border-ivory-100/35 pt-2"
+            >
+              <span className="block h-1.5 w-px bg-ivory-100/80" />
+            </motion.div>
+            <span className="eyebrow">Scroll</span>
+          </motion.div>
 
-      {/* Side rail */}
-      <div className="pointer-events-none absolute left-6 md:left-12 top-1/2 z-10 hidden -translate-y-1/2 lg:block">
-        <div className="flex flex-col items-center gap-4 text-[10px] uppercase tracking-ultra text-ivory-200/55">
-          <span className="block h-16 w-px bg-ivory-100/15" />
-          <span style={{ writingMode: "vertical-rl" }} className="rotate-180">
-            Cairo · 30°02′N
-          </span>
-          <span className="block h-16 w-px bg-ivory-100/15" />
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, duration: 0.8 }}
+            className="hidden md:flex flex-col items-end text-right"
+          >
+            <span className="eyebrow">Heritage</span>
+            <span className="display-serif text-3xl lg:text-4xl text-ivory-100 mt-1">
+              22 <span className="text-ivory-200/55 text-lg">yrs</span> · 31{" "}
+              <span className="text-ivory-200/55 text-lg">UAE</span> · 20{" "}
+              <span className="text-ivory-200/55 text-lg">EG</span>
+            </span>
+          </motion.div>
         </div>
-      </div>
-
-      {/* Right side stat */}
-      <div className="pointer-events-none absolute right-6 md:right-12 top-1/2 z-10 hidden -translate-y-1/2 md:block">
-        <div className="flex flex-col items-end gap-2 text-right">
-          <span className="eyebrow">Heritage</span>
-          <span className="display-serif text-5xl text-ivory-100">28<span className="text-ivory-200/60">yrs</span></span>
-          <span className="text-[11px] text-ivory-200/60 max-w-[160px] leading-relaxed">
-            Two storied houses, one quiet pursuit of permanence.
-          </span>
-        </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -10,20 +10,19 @@ export default function Experience() {
     target: ref,
     offset: ["start end", "end start"]
   });
-  const bgY = useTransform(scrollYProgress, [0, 1], ["-15%", "15%"]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1.1, 1.02, 1.08]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["10%", "-10%"]);
+  const bgY = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1.06, 1.01, 1.05]);
 
   return (
     <section
       id="experience"
       ref={ref}
-      className="relative h-[120vh] w-full overflow-hidden bg-ink-950"
+      className="relative h-[110vh] min-h-[640px] w-full overflow-hidden bg-ink-950"
     >
       {/* Parallax background */}
       <motion.div
         style={{ y: bgY, scale }}
-        className="absolute inset-0 -z-10"
+        className="absolute inset-0 -z-10 will-change-transform"
       >
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -37,65 +36,66 @@ export default function Experience() {
         <div className="vignette absolute inset-0" />
       </motion.div>
 
-      {/* Sticky-feeling centered content */}
       <div className="sticky top-0 flex h-screen items-center">
-        <motion.div
-          style={{ y: textY }}
-          className="mx-auto w-full max-w-[1500px] px-6 md:px-12"
-        >
+        <div className="mx-auto w-full max-w-[1500px] px-5 sm:px-8 md:px-12">
           <div className="flex flex-col items-center text-center">
             <motion.span
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-20%" }}
-              transition={{ duration: 1 }}
+              viewport={{ once: true, margin: "-15%" }}
+              transition={{ duration: 0.9 }}
               className="eyebrow"
             >
-              The Atelier Film · 02:18
+              The MRS Film · 02:14
             </motion.span>
 
-            <div className="mt-8 overflow-hidden">
+            <div className="mt-6 overflow-hidden">
               <motion.h2
                 initial={{ y: "100%" }}
                 whileInView={{ y: "0%" }}
-                viewport={{ once: true, margin: "-15%" }}
-                transition={{ duration: 1.2, ease: [0.2, 0.8, 0.2, 1] }}
-                className="display-serif text-[12vw] sm:text-7xl md:text-8xl lg:text-[8rem] text-ivory-100 leading-[0.95]"
+                viewport={{ once: true, margin: "-10%" }}
+                transition={{ duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
+                className="display-serif text-ivory-100"
+                style={{
+                  fontSize: "clamp(2.4rem, 9vw, 8rem)",
+                  lineHeight: 0.96
+                }}
               >
-                Quality makes
+                Not just building.
               </motion.h2>
             </div>
             <div className="overflow-hidden">
               <motion.h2
                 initial={{ y: "100%" }}
                 whileInView={{ y: "0%" }}
-                viewport={{ once: true, margin: "-15%" }}
+                viewport={{ once: true, margin: "-10%" }}
                 transition={{
-                  duration: 1.2,
+                  duration: 1,
                   delay: 0.1,
                   ease: [0.2, 0.8, 0.2, 1]
                 }}
-                className="display-serif text-[12vw] sm:text-7xl md:text-8xl lg:text-[8rem] text-ivory-100 leading-[0.95]"
+                className="display-serif"
+                style={{
+                  fontSize: "clamp(2.4rem, 9vw, 8rem)",
+                  lineHeight: 0.96
+                }}
               >
-                <span className="script-accent text-ivory-200">the difference</span>
-                <span className="text-ivory-100">.</span>
+                <span className="script-accent text-ivory-200">elevating.</span>
               </motion.h2>
             </div>
 
             {/* Rotating play button */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.85 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-20%" }}
-              transition={{ duration: 1, delay: 0.4 }}
-              className="relative mt-16"
+              viewport={{ once: true, margin: "-15%" }}
+              transition={{ duration: 0.9, delay: 0.3 }}
+              className="relative mt-12 md:mt-16"
             >
               <button
-                aria-label="Play the atelier film"
-                className="group relative flex h-44 w-44 items-center justify-center md:h-56 md:w-56"
-                data-cursor="hover"
+                aria-label="Play the MRS film"
+                className="group relative flex h-40 w-40 sm:h-48 sm:w-48 md:h-56 md:w-56 items-center justify-center"
               >
-                {/* Rotating circle text */}
                 <svg
                   viewBox="0 0 200 200"
                   className="absolute inset-0 h-full w-full animate-spinSlow"
@@ -108,7 +108,7 @@ export default function Experience() {
                   </defs>
                   <text
                     fill="#f4ecd0"
-                    fontSize="11"
+                    fontSize="10.5"
                     letterSpacing="6"
                     style={{
                       textTransform: "uppercase",
@@ -116,30 +116,32 @@ export default function Experience() {
                     }}
                   >
                     <textPath href="#circlePath">
-                      Watch the film · The atelier · 02:18 ·
+                      Watch the film · MRS Developments · 02:14 ·
                     </textPath>
                   </text>
                 </svg>
-                {/* Center button */}
-                <span className="relative flex h-20 w-20 items-center justify-center rounded-full bg-ivory-100 text-ink-950 transition-transform duration-500 group-hover:scale-110">
-                  <Play className="h-6 w-6 translate-x-0.5 fill-ink-950" strokeWidth={0} />
+                <span className="relative flex h-18 w-18 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-ivory-100 text-ink-950 transition-transform duration-500 group-hover:scale-110">
+                  <Play
+                    className="h-6 w-6 translate-x-0.5 fill-ink-950"
+                    strokeWidth={0}
+                  />
                   <span className="absolute inset-0 -z-10 rounded-full bg-ivory-100 blur-2xl opacity-30 group-hover:opacity-60 transition-opacity duration-500" />
                 </span>
               </button>
             </motion.div>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-20%" }}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="mt-12 max-w-md text-[14px] leading-relaxed text-ivory-200/70"
+              viewport={{ once: true, margin: "-15%" }}
+              transition={{ duration: 0.9, delay: 0.45 }}
+              className="mt-10 max-w-md text-[13px] sm:text-[14px] leading-relaxed text-ivory-200/70"
             >
-              A short film on craft, restraint, and the quiet hours of a house
-              before anyone moves in.
+              A short film on twenty-two years of building &mdash; and the
+              quiet discipline that keeps every site on schedule.
             </motion.p>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
